@@ -33,12 +33,11 @@ public class ExpendituresInfoController extends BaseController {
     @Autowired
     private ExpendituresInfoService expendituresInfoService;
 
-    @RequestMapping(value = "/gather", method = RequestMethod.POST)
+    @RequestMapping(value = "/expenditures", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> gatherInfo(HttpServletRequest request) {
-        System.out.println("==================gatherInfo===============:" + request);
+
         ExpendituresInfoRequest expendituresInfoRequest = parseEncryptedJsonRequest(request, ExpendituresInfoRequest.class);
-        System.out.println("==================expendituresInfoRequest===============:" + expendituresInfoRequest);
         return create4Result(expendituresInfoService.handleExpendituresInfo(expendituresInfoRequest));
     }
 

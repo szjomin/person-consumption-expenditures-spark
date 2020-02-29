@@ -4,22 +4,16 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
-/**
- * 时间处理工具
- *
- */
-public final class DateUtils
-{
-  private DateUtils()
-  {
+public final class DateUtils {
+  private DateUtils() {
     super();
   }
 
@@ -32,6 +26,15 @@ public final class DateUtils
   public static final String DD = "dd";
   public static final String YYYYMM = "yyyyMM";
   public static final String HH = "HH";
+
+  public static final String MONTH_FORMAT = "yyyyMM";
+  public static final String DAY_FORMAT = "yyyyMMdd";
+  public static final String HOUR_FORMAT = "yyyyMMddHH";
+  public static final String ONLY_DAY_FORMAT = "dd";
+  public static final String ONLY_HOUR_FORMAT = "HH";
+  public static final String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+  public static final String DATE_TYPE_HOUR = "hour";
+  public static final String DATE_TYPE_DAY = "day";
   /**
    * 年月日时分秒
    */
@@ -60,11 +63,18 @@ public final class DateUtils
 
   public static final int ONE_SECOND_MILLS = 1000;
 
+  public static String getDateStringByMillisecond(String format, Long millisecond)
+  {
+    TimeZone timeZoneSH = TimeZone.getTimeZone("Asia/Shanghai");
+    SimpleDateFormat sdf = new SimpleDateFormat(format);
+    sdf.setTimeZone(timeZoneSH);
+    return sdf.format(new Date(millisecond));
+  }
+
   /**
    * @return
    */
-  public static String getWeek(Date date)
-  {
+  public static String getWeek(Date date) {
     return getCurrentWeekYear(date) + "_" + getCurrentWeek(date);
   }
 
@@ -73,8 +83,7 @@ public final class DateUtils
    *
    * @return 当前周所有的年份
    */
-  private static int getCurrentWeekYear(Date date)
-  {
+  private static int getCurrentWeekYear(Date date) {
     Calendar calendar = Calendar.getInstance();
     calendar.setTime(date);
     calendar.setFirstDayOfWeek(Calendar.MONDAY);
@@ -97,9 +106,8 @@ public final class DateUtils
    *
    * @param format
    * @return
-     */
-  public static String getCurrent(String format)
-  {
+   */
+  public static String getCurrent(String format) {
     return formatDate(new Date(), format);
   }
 
@@ -108,8 +116,7 @@ public final class DateUtils
    *
    * @return 当前周号
    */
-  private static int getCurrentWeek(Date date)
-  {
+  private static int getCurrentWeek(Date date) {
     Calendar calendar = Calendar.getInstance();
     calendar.setTime(date);
     calendar.setFirstDayOfWeek(Calendar.MONDAY);
@@ -123,8 +130,7 @@ public final class DateUtils
    * @return
    * @throws ParseException
    */
-  public static Date getEarlyInTheDay(Date date) throws ParseException
-  {
+  public static Date getEarlyInTheDay(Date date) throws ParseException {
     String dateString = new SimpleDateFormat(SHORT_DATE_FORMAT_STR).format(date) + " " + EARLY_TIME;
     return new SimpleDateFormat(LONG_DATE_FORMAT_STR).parse(dateString);
   }
@@ -135,8 +141,7 @@ public final class DateUtils
    * @param date
    * @return
    */
-  public static Date getFirstOfDay(Date date)
-  {
+  public static Date getFirstOfDay(Date date) {
     String dateString = new SimpleDateFormat(EARER_IN_THE_DAY).format(date);
     try {
       return new SimpleDateFormat(LONG_DATE_FORMAT_STR).parse(dateString);
@@ -152,8 +157,7 @@ public final class DateUtils
    * @return
    * @throws ParseException
    */
-  public static Date getLateInTheDay(Date date) throws ParseException
-  {
+  public static Date getLateInTheDay(Date date) throws ParseException {
     String dateString = new SimpleDateFormat(SHORT_DATE_FORMAT_STR).format(date) + " " + LATE_TIME;
     return new SimpleDateFormat(LONG_DATE_FORMAT_STR).parse(dateString);
   }
@@ -166,8 +170,7 @@ public final class DateUtils
    * @return 增加时间后的日期
    */
 
-  public static Date addSecond(Date date, int second)
-  {
+  public static Date addSecond(Date date, int second) {
     Calendar cal = Calendar.getInstance();
     cal.setTime(date);
     cal.add(Calendar.SECOND, second);
@@ -180,8 +183,7 @@ public final class DateUtils
    * @param date
    * @return
    */
-  public static long subtractNowDay(Date date)
-  {
+  public static long subtractNowDay(Date date) {
     Calendar calendar = Calendar.getInstance();
     calendar.setTime(date);
     long dateTimeInMillis = calendar.getTimeInMillis();
@@ -198,8 +200,7 @@ public final class DateUtils
    * @param endDate   结束日期
    * @return
    */
-  public static int subtractSecond(Date startDate, Date endDate)
-  {
+  public static int subtractSecond(Date startDate, Date endDate) {
     Calendar startCalendar = Calendar.getInstance();
     startCalendar.setTime(startDate);
     long startTimeInMillis = startCalendar.getTimeInMillis();
@@ -211,10 +212,9 @@ public final class DateUtils
   }
 
   /*
-  * 获取当前日志对应的月的最大天数
-  * */
-  public static int getMaxDay(Date date)
-  {
+   * 获取当前日志对应的月的最大天数
+   * */
+  public static int getMaxDay(Date date) {
     Calendar cal = Calendar.getInstance();
     cal.setTime(date);
     return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
@@ -228,14 +228,12 @@ public final class DateUtils
    * @return
    * @throws ParseException
    */
-  public static Date parserStringToDate(String dateString, String format) throws ParseException
-  {
+  public static Date parserStringToDate(String dateString, String format) throws ParseException {
     DateFormat dateFormat = new SimpleDateFormat(format);
     return dateFormat.parse(dateString);
   }
 
-  public static Date parse(String dateString, String format)
-  {
+  public static Date parse(String dateString, String format) {
     Date date = null;
     try {
       date = parserStringToDate(dateString, format);
@@ -245,13 +243,11 @@ public final class DateUtils
     return date;
   }
 
-  public static Date parse4ShortPattern(String dateString)
-  {
+  public static Date parse4ShortPattern(String dateString) {
     return parse(dateString, SHORT_DATE_FORMAT_STR);
   }
 
-  public static int getDateDistance(Date fromDate, Date toDate) throws Exception
-  {
+  public static int getDateDistance(Date fromDate, Date toDate) throws Exception {
     if (null == fromDate || null == toDate) {
       return -1;
     }
@@ -275,8 +271,7 @@ public final class DateUtils
    * @param dateInterval
    * @return
    */
-  public static Date dateInterval(Date date, int dateInterval)
-  {
+  public static Date dateInterval(Date date, int dateInterval) {
     Calendar cal = Calendar.getInstance();
     cal.setTime(date);
     cal.add(Calendar.DAY_OF_MONTH, dateInterval);
@@ -286,11 +281,10 @@ public final class DateUtils
   /**
    * 获取某天向前或者向后推num天的日期
    *
-    * @return
+   * @return
    * @throws ParseException
    */
-  public static String getDateBeforeOrAfter(String dayFormat, String day, int num, String resultFormat)
-  {
+  public static String getDateBeforeOrAfter(String dayFormat, String day, int num, String resultFormat) {
     SimpleDateFormat df = new SimpleDateFormat(dayFormat);
     Date date;
 
@@ -313,8 +307,7 @@ public final class DateUtils
    * @return
    * @throws ParseException
    */
-  public static String getMonthBeforeOrAfter(String monthFormat, String month, int num, String resultFormat)
-  {
+  public static String getMonthBeforeOrAfter(String monthFormat, String month, int num, String resultFormat) {
     SimpleDateFormat df = new SimpleDateFormat(monthFormat);
     Date date;
 
@@ -337,8 +330,7 @@ public final class DateUtils
    * @return
    * @throws ParseException
    */
-  public static String getDateFormatFromDay(String dayFormat, String day, String resultFormat)
-  {
+  public static String getDateFormatFromDay(String dayFormat, String day, String resultFormat) {
     SimpleDateFormat df = new SimpleDateFormat(dayFormat);
     Date date;
 
@@ -355,8 +347,8 @@ public final class DateUtils
   }
 
   /*
-  * 获取某月最后一天的日期
-  * */
+   * 获取某月最后一天的日期
+   * */
   /*public static String getLastDayOfMonth(String monthFormat, String month, String dayFormat)
   {
     SimpleDateFormat df = new SimpleDateFormat(monthFormat);
@@ -382,8 +374,7 @@ public final class DateUtils
     return lastDayOfMonth;
   }*/
 
-  public static Date getBeginOfDay(Date date)
-  {
+  public static Date getBeginOfDay(Date date) {
     String beginDay = new SimpleDateFormat(EARER_IN_THE_DAY).format(date);
     try {
       return parserStringToDate(beginDay, LONG_DATE_FORMAT_STR);
@@ -393,8 +384,7 @@ public final class DateUtils
     return null;
   }
 
-  public static Date getEndOfDay(Date date)
-  {
+  public static Date getEndOfDay(Date date) {
     String endDay = new SimpleDateFormat(LATE_IN_THE_DAY).format(date);
     try {
       return parserStringToDate(endDay, MAX_LONG_DATE_FORMAT_STR);
@@ -404,26 +394,22 @@ public final class DateUtils
     return null;
   }
 
-  public static String formatDate(Date date, String format)
-  {
+  public static String formatDate(Date date, String format) {
     DateFormat dateFormat = new SimpleDateFormat(format);
     return dateFormat.format(date);
   }
 
-  public static String formatDate4ShortPattern(Date date)
-  {
+  public static String formatDate4ShortPattern(Date date) {
     return formatDate(date, SHORT_DATE_FORMAT_STR);
   }
 
-  public static Calendar getCalendar(Date date)
-  {
+  public static Calendar getCalendar(Date date) {
     Calendar calendar = Calendar.getInstance();
     calendar.setTime(date);
     return calendar;
   }
 
-  public static long truncateDate(Date beginDate, Date endDate)
-  {
+  public static long truncateDate(Date beginDate, Date endDate) {
     if (endDate != null && beginDate != null) {
       GregorianCalendar end = new GregorianCalendar();
       end.setTime(endDate);
@@ -436,16 +422,14 @@ public final class DateUtils
     return 0;
   }
 
-  public static Date addDays(Date current, int days)
-  {
+  public static Date addDays(Date current, int days) {
     if (null == current) {
       return null;
     }
     return addDays(current, days, "d");
   }
 
-  public static Date addDays(Date current, int time, String unit)
-  {
+  public static Date addDays(Date current, int time, String unit) {
     if (null == current) {
       return null;
     }
@@ -462,8 +446,7 @@ public final class DateUtils
     return new Date(current.getTime() + Long.valueOf(time) * ONE_DAY_SECONDS * 1000L);
   }
 
-  public static boolean areSameDay(Date dateA, Date dateB)
-  {
+  public static boolean areSameDay(Date dateA, Date dateB) {
     Calendar calDateA = Calendar.getInstance();
     calDateA.setTime(dateA);
 
@@ -471,12 +454,11 @@ public final class DateUtils
     calDateB.setTime(dateB);
 
     return calDateA.get(Calendar.YEAR) == calDateB.get(Calendar.YEAR)
-      && calDateA.get(Calendar.MONTH) == calDateB.get(Calendar.MONTH)
-      && calDateA.get(Calendar.DAY_OF_MONTH) == calDateB.get(Calendar.DAY_OF_MONTH);
+            && calDateA.get(Calendar.MONTH) == calDateB.get(Calendar.MONTH)
+            && calDateA.get(Calendar.DAY_OF_MONTH) == calDateB.get(Calendar.DAY_OF_MONTH);
   }
 
-  public static boolean isBetween(Date date, Date start, Date end)
-  {
+  public static boolean isBetween(Date date, Date start, Date end) {
     if (start != null && end != null && start.compareTo(end) > 0) {
       throw new RuntimeException("起止日期配置错误：结束日期小于开始日期!");
     }
@@ -496,69 +478,32 @@ public final class DateUtils
     return start.compareTo(date) <= 0 && end.compareTo(date) >= 0;
   }
 
-  public static long truncateDay(long time)
-  {
+  public static long truncateDay(long time) {
     return org.apache.commons.lang.time.DateUtils.truncate(new Date(time), Calendar.DATE).getTime();
   }
 
-  public static String getFormatedDay(long time)
-  {
+  public static String getFormatedDay(long time) {
     return DateFormatUtils.format(time, SHORT_DATE_FORMAT_STR);
   }
 
-  public static String getFormatedDayWithLongFormat(long time)
-  {
+  public static String getFormatedDayWithLongFormat(long time) {
     return DateFormatUtils.format(time, LONG_DATE_FORMAT_STR);
   }
 
-  public static String getFormatedTimeWithHmFormat(long time)
-  {
+  public static String getFormatedTimeWithHmFormat(long time) {
     return DateFormatUtils.format(time, HOUR_MIN_FORMAT_STR);
   }
 
-  public static String format(Date date, String pattern)
-  {
+  public static String format(Date date, String pattern) {
 
     return DateFormatUtils.format(date, pattern);
-  }
-
-  public static void main(String[] args) throws Exception
-  {
-    for (int i = 0; i < 100; i++) {
-      System.out.println(((Double) (Math.random() * 180)).intValue());
-
-    }
-
-    System.out.print(getMaxDay(new Date()));
-        /*System.out.println(getTheMorningTime());
-        System.out.println(getTheNextWeekTime(1));
-        System.out.println(getTheNextMonthTime(1));
-        System.out.println(getTheNextYearTime(1));*/
-
-        /*Date date = parserStringToDate("2014-07-04", SHORT_DATE_FORMAT_STR);
-        Date start = parserStringToDate("2014-07-01", SHORT_DATE_FORMAT_STR);
-        Date end = parserStringToDate("2014-07-03", SHORT_DATE_FORMAT_STR);
-        System.out.println(isBetween(date, start, end));
-        */
-
-        /*System.out.println(getSpecailPatten(new Date()));*/
-
-        /*
-        Date date1 = parserStringToDate("2014-07-02", SHORT_DATE_FORMAT_STR);
-        Date date2 = parserStringToDate("2014-07-01", SHORT_DATE_FORMAT_STR);
-        System.out.println(truncateDate(date1, date2));
-
-        System.out.println(formatDate(getFirstOfDay(new Date()),"yyyy-MM-dd HH:mm:ss SSS"));
-        System.out.println(formatDate(getEndOfDay(new Date()),"yyyy-MM-dd HH:mm:ss SSS"));
-        */
   }
 
   /**
    * @param day
    * @return
    */
-  public static String getWeekFromDay(String day)
-  {
+  public static String getWeekFromDay(String day) {
     Date date = DateUtils.parse(day, SHORT_DATE_FORMAT_STR);
     Calendar calendar = Calendar.getInstance();
     calendar.setFirstDayOfWeek(Calendar.MONDAY);
@@ -577,8 +522,7 @@ public final class DateUtils
     return String.format(WEEKLY_DATE_PATTERN, year, weekNum);
   }
 
-  public static Date getTheMorningTime()
-  {
+  public static Date getTheMorningTime() {
     return getTheMorningTime(1);
   }
 
@@ -587,13 +531,11 @@ public final class DateUtils
    *
    * @return
    */
-  public static Date getTheMorningTime(int period)
-  {
+  public static Date getTheMorningTime(int period) {
     return getTime(Calendar.DATE, period, true);
   }
 
-  private static Date getTime(int calendarUnit, int period, boolean random)
-  {
+  private static Date getTime(int calendarUnit, int period, boolean random) {
     if (period <= 0) {
       throw new RuntimeException("period 不能小于1");
     }
@@ -618,38 +560,33 @@ public final class DateUtils
     return ret;
   }
 
-  public static Date getTheNextWeekTime(int period)
-  {
+  public static Date getTheNextWeekTime(int period) {
     Calendar cal = Calendar.getInstance();
     cal.setTime(getTime(Calendar.WEEK_OF_YEAR, period, true));
     cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
     return cal.getTime();
   }
 
-  public static Date getTheNextMonthTime(int period)
-  {
+  public static Date getTheNextMonthTime(int period) {
     Calendar cal = Calendar.getInstance();
     cal.setTime(getTime(Calendar.MONTH, period, true));
     cal.set(Calendar.DAY_OF_MONTH, 1);
     return cal.getTime();
   }
 
-  public static Date getTheNextYearTime(int period)
-  {
+  public static Date getTheNextYearTime(int period) {
     Calendar cal = Calendar.getInstance();
     cal.setTime(getTime(Calendar.YEAR, period, true));
     cal.set(Calendar.DAY_OF_YEAR, 1);
     return cal.getTime();
   }
 
-  public static String getSpecailPatten(Date date)
-  {
+  public static String getSpecailPatten(Date date) {
     String datePattern = formatDate(date, DateUtils.SHORT_DATE_FORMAT_STR);
     return datePattern.replaceAll("-", "\\.");
   }
 
-  public static int convertToMinFromMills(long value)
-  {
+  public static int convertToMinFromMills(long value) {
     return (int) Math.ceil((double) value / (ONE_SECOND_MILLS * ONE_MINUTE_SECONDS));
   }
 
@@ -660,8 +597,7 @@ public final class DateUtils
    * @param formatStr  时间字符串类型 如：YMD，YMD_HMS，YMD_HMSZ
    * @return
    */
-  public static Date getDate(String dateString, String formatStr)
-  {
+  public static Date getDate(String dateString, String formatStr) {
     SimpleDateFormat sdf = new SimpleDateFormat(formatStr);
     if (dateString == null || dateString.equals("")) {
       return null;
@@ -682,8 +618,7 @@ public final class DateUtils
    * @param formatStr 时间字符串类型 如：YMD，YMD_HMS，YMD_HMSZ
    * @return
    */
-  public static String getFormatDateStr(Date date, String formatStr)
-  {
+  public static String getFormatDateStr(Date date, String formatStr) {
     SimpleDateFormat sdf = new SimpleDateFormat(formatStr);
     if (date != null) {
       if (formatStr.equals(YMD_HMSZ)) {
@@ -700,8 +635,7 @@ public final class DateUtils
    * @param type       <a>DateUtils.BIG 当日最大时间</a><a>DateUtils.SMALL 当日最小时间</a>
    * @return
    */
-  public static Date getDate(String dateString, String formatStr, String type)
-  {
+  public static Date getDate(String dateString, String formatStr, String type) {
     SimpleDateFormat sdf = new SimpleDateFormat(formatStr);
     if (dateString == null || dateString.equals("")) {
       return null;
@@ -729,8 +663,7 @@ public final class DateUtils
    * @author crush_lee
    * @date 2014年9月11日
    */
-  public static Date getDate(String type)
-  {
+  public static Date getDate(String type) {
     Calendar calendar = Calendar.getInstance();
     format(calendar, type);
     return calendar.getTime();
@@ -745,16 +678,14 @@ public final class DateUtils
    * @author crush_lee
    * @date 2014年9月11日
    */
-  public static Date getDate(Date date, String type)
-  {
+  public static Date getDate(Date date, String type) {
     Calendar calendar = Calendar.getInstance();
     calendar.setTime(date);
     format(calendar, type);
     return calendar.getTime();
   }
 
-  private static void format(Calendar calendar, String type)
-  {
+  private static void format(Calendar calendar, String type) {
     if (type.equals(BIG)) {
       calendar.set(Calendar.HOUR, 23);
       calendar.set(Calendar.MINUTE, 59);
@@ -767,13 +698,11 @@ public final class DateUtils
     }
   }
 
-  public static Date convertString(String value)
-  {
+  public static Date convertString(String value) {
     return convertString(value, "yyyy-MM-dd HH:mm:ss");
   }
 
-  public static Date convertString(String value, String format)
-  {
+  public static Date convertString(String value, String format) {
     SimpleDateFormat sdf = new SimpleDateFormat(format);
     if (value == null) {
       return null;
@@ -787,8 +716,8 @@ public final class DateUtils
   }
 
   /*
-  * 根据分钟字符串获取天
-  * */
+   * 根据分钟字符串获取天
+   * */
   public static String getDayByMinute(String minute) {
     if (StringUtils.isEmpty(minute)) {
       return "";
@@ -798,8 +727,8 @@ public final class DateUtils
   }
 
   /*
-  * 根据分钟字符串获取小时
-  * */
+   * 根据分钟字符串获取小时
+   * */
   public static String getHourByMinute(String minute) {
     if (StringUtils.isEmpty(minute)) {
       return "";
@@ -809,8 +738,8 @@ public final class DateUtils
   }
 
   /*
-  * 根据分钟字符串仅获取小时
-  * */
+   * 根据分钟字符串仅获取小时
+   * */
   public static String getOnlyHourByMinute(String minute) {
     if (StringUtils.isEmpty(minute)) {
       return "";
@@ -820,8 +749,8 @@ public final class DateUtils
   }
 
   /*
-  * 根据分钟字符串仅获取分钟
-  * */
+   * 根据分钟字符串仅获取分钟
+   * */
   public static String getOnlyMinuteByMinute(String minute) {
     if (StringUtils.isEmpty(minute)) {
       return "";
@@ -831,8 +760,8 @@ public final class DateUtils
   }
 
   /*
-  * 根据小时字符串获取月
-  * */
+   * 根据小时字符串获取月
+   * */
   public static String getMonthByHour(String hour) {
     if (StringUtils.isEmpty(hour)) {
       return "";
@@ -842,8 +771,8 @@ public final class DateUtils
   }
 
   /*
-  * 根据小时字符串获取天
-  * */
+   * 根据小时字符串获取天
+   * */
   public static String getDayByHour(String hour) {
     if (StringUtils.isEmpty(hour)) {
       return "";
@@ -853,8 +782,8 @@ public final class DateUtils
   }
 
   /*
-  * 根据小时字符串仅获取天
-  * */
+   * 根据小时字符串仅获取天
+   * */
   public static String getOnlyDayByHour(String hour) {
     if (StringUtils.isEmpty(hour)) {
       return "";
@@ -864,8 +793,8 @@ public final class DateUtils
   }
 
   /*
-  * 根据小时字符串仅获取小时
-  * */
+   * 根据小时字符串仅获取小时
+   * */
   public static String getOnlyHourByHour(String hour) {
     if (StringUtils.isEmpty(hour)) {
       return "";
@@ -874,14 +803,44 @@ public final class DateUtils
     return hour.substring(8, 10);
   }
 
-  /*
-  * 根据天字符串仅获取天
-  * */
-  public static String getOnlyDayByDay(String day) {
-    if (StringUtils.isEmpty(day)) {
-      return "";
+  public static void main(String[] args) throws Exception {
+    String minute = "201601201005";
+    System.out.println(DateUtils.getDayByMinute(minute));
+    System.out.println(DateUtils.getHourByMinute(minute));
+    System.out.println(DateUtils.getOnlyHourByMinute(minute));
+    System.out.println(DateUtils.getOnlyMinuteByMinute(minute));
+
+    System.out.println(DateUtils.getDateStringByMillisecond(DateUtils.HOUR_FORMAT, 1488326400000L));
+
+    System.out.println(DateUtils.getDayByHour(DateUtils.getDateStringByMillisecond(DateUtils.HOUR_FORMAT, 1488326400000L)));
+
+    /*for (int i = 0; i < 100; i++) {
+      System.out.println(((Double) (Math.random() * 180)).intValue());
     }
 
-    return day.substring(6, 8);
+
+
+    System.out.print(getMaxDay(new Date()));*/
+        /*System.out.println(getTheMorningTime());
+        System.out.println(getTheNextWeekTime(1));
+        System.out.println(getTheNextMonthTime(1));
+        System.out.println(getTheNextYearTime(1));*/
+
+        /*Date date = parserStringToDate("2014-07-04", SHORT_DATE_FORMAT_STR);
+        Date start = parserStringToDate("2014-07-01", SHORT_DATE_FORMAT_STR);
+        Date end = parserStringToDate("2014-07-03", SHORT_DATE_FORMAT_STR);
+        System.out.println(isBetween(date, start, end));
+        */
+
+    /*System.out.println(getSpecailPatten(new Date()));*/
+
+        /*
+        Date date1 = parserStringToDate("2014-07-02", SHORT_DATE_FORMAT_STR);
+        Date date2 = parserStringToDate("2014-07-01", SHORT_DATE_FORMAT_STR);
+        System.out.println(truncateDate(date1, date2));
+
+        System.out.println(formatDate(getFirstOfDay(new Date()),"yyyy-MM-dd HH:mm:ss SSS"));
+        System.out.println(formatDate(getEndOfDay(new Date()),"yyyy-MM-dd HH:mm:ss SSS"));
+        */
   }
 }

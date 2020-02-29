@@ -14,32 +14,52 @@ import org.junit.Test;
 
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Unit test for simple App.
  */
 public class AppTest 
 {
-
+    /**
+     * Rigorous Test :-)
+     */
     @Test
     public void AppTest() {
-   
+        //String url = "http://localhost:8080/pce/gather";
         String url = "http://CDH01:8080/pce/expenditures";
         System.out.println("junit request url==================" + url);
         PostMethod method = new PostMethod(url);
 
         PersonConsumptionInfo personConsumptionInfo = new PersonConsumptionInfo();
 
+        /*SimpleCustomerProfileModel simpleCustomerProfileInfo = new SimpleCustomerProfileModel();
+        simpleCustomerProfileInfo.setPersonalIdentificationNumber("56000001");
+        simpleCustomerProfileInfo.setAge("25");
+        simpleCustomerProfileInfo.setCareer("banker");
+        simpleCustomerProfileInfo.setGender("male");*/
+
+        String beginDateStr = "2019-08-18 10:00:00";
+        String endDateStr = "2019-08-18 10:10:00";
+        try {
+            Date beginDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(beginDateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
 
         SimpleConsumptionModel simpleConsumption1 = new SimpleConsumptionModel();
         SimpleConsumptionModel simpleConsumption2 = new SimpleConsumptionModel();
 
-        simpleConsumption1.setPersonalIdentificationNumber("56000001");
+        simpleConsumption1.setPersonalIdentificationNumber(56000001L);
         simpleConsumption1.setConsumptionType("insurance");
         simpleConsumption1.setAmount(1000);
+        /*simpleConsumption1.setCreateTime(beginDate);*/
 
-        simpleConsumption1.setPersonalIdentificationNumber("56000001");
+        simpleConsumption1.setPersonalIdentificationNumber(56000001L);
         simpleConsumption2.setConsumptionType("loanRepayment");
         simpleConsumption2.setAmount(2000);
 
@@ -48,7 +68,9 @@ public class AppTest
         list.add(simpleConsumption1);
         list.add(simpleConsumption2);
 
+        personConsumptionInfo.setUserId(56000001L);
         personConsumptionInfo.setSimpleConsumptionList(list);
+
 
         try {
             String json = JSONUtil.fromObject(personConsumptionInfo);

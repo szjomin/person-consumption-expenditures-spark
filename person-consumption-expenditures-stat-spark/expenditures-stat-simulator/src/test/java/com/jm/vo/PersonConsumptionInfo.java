@@ -7,6 +7,8 @@ import java.util.List;
 
 public class PersonConsumptionInfo {
 
+	private long userId;
+
 	@JsonProperty("data")
 	private List<SimpleConsumptionModel> simpleConsumptionList;
 
@@ -18,4 +20,11 @@ public class PersonConsumptionInfo {
 		this.simpleConsumptionList = simpleConsumptionList;
 	}
 
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
 }

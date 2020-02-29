@@ -8,7 +8,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
  * Hello world!
  *
  */
-
 public class App 
 {
     /*@Bean

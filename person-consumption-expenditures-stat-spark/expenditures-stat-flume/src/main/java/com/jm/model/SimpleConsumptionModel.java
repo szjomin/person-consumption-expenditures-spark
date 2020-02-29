@@ -12,7 +12,7 @@ public class SimpleConsumptionModel {
     private static final long serialVersionUID = 1L;
 
     @JsonProperty("personalIdentificationNumber")
-    private long personalIdentificationNumber;
+    private String personalIdentificationNumber;
 
     @JsonProperty("consumptionType")
     private String consumptionType;
@@ -23,11 +23,11 @@ public class SimpleConsumptionModel {
     @JsonProperty("createTime")
     private String createTime;
 
-    public Long getPersonalIdentificationNumber() {
+    public String getPersonalIdentificationNumber() {
         return personalIdentificationNumber;
     }
 
-    public void setPersonalIdentificationNumber(Long personalIdentificationNumber) {
+    public void setPersonalIdentificationNumber(String personalIdentificationNumber) {
         this.personalIdentificationNumber = personalIdentificationNumber;
     }
 

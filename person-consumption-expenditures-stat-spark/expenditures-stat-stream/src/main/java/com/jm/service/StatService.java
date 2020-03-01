@@ -2,6 +2,7 @@ package com.jm.service;
 
 import com.jm.common.HBaseClient;
 import com.jm.model.SimpleConsumptionModel;
+import com.jm.model.SimplePersonConsumptionStatModel;
 import com.jm.utils.DateUtils;
 import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.util.Bytes;
@@ -30,16 +31,14 @@ public class StatService {
         return service;
     }
 
-  
 
-    public void addPersonConsumptionHistory(SimpleConsumptionModel model) {
+    public void addPersonConsumptionHistory(SimplePersonConsumptionStatModel model) {
 
         System.out.println("====================addPersonConsumptionHistory==========================");
-        System.out.println(model.toString());
 
         String tableName = "person_consumption_history";
         Table table = HBaseClient.getInstance(this.props).getTable(tableName);
-        String rowKey =model.getPersonalIdentificationNumber() + ":" + model.getConsumptionType() + ":" + model.getAmount();
+        String rowKey = model.getPersonId() + ":" + DateUtils.getDayByHour(model.getCreateTime());
 
         try {
             table.incrementColumnValue(Bytes.toBytes(rowKey), Bytes.toBytes("amount"), Bytes.toBytes(model.getConsumptionType()), model.getAmount());

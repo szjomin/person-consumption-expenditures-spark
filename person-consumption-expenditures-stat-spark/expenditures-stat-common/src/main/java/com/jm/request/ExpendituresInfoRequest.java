@@ -7,8 +7,6 @@ import java.util.List;
 
 public class ExpendituresInfoRequest
 {
-  private long userId;
-
   @JsonProperty("data")
   private List<SimpleConsumptionModel> simpleConsumptionList;
 
@@ -20,19 +18,10 @@ public class ExpendituresInfoRequest
     this.simpleConsumptionList = simpleConsumptionList;
   }
 
-  public long getUserId() {
-    return userId;
-  }
-
-  public void setUserId(long userId) {
-    this.userId = userId;
-  }
-
   @Override
   public String toString() {
     return "ExpendituresInfoRequest{" +
-            "userId=" + userId +
-            ", simpleConsumptionList=" + simpleConsumptionList +
+            "simpleConsumptionList=" + simpleConsumptionList +
             '}';
   }
 }

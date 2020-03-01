@@ -7,12 +7,12 @@ import org.codehaus.jackson.annotate.JsonProperty;
 * @Author: Jomin
 * @Date: 23:36 2020/2/20 
 */ 
-public class SimpleConsumptionModel {
+public class SimpleConsumptionModel extends BaseModel{
 
     private static final long serialVersionUID = 1L;
 
-    @JsonProperty("personalIdentificationNumber")
-    private String personalIdentificationNumber;
+    @JsonProperty("personalId")
+    private long personalId;
 
     @JsonProperty("consumptionType")
     private String consumptionType;
@@ -23,12 +23,12 @@ public class SimpleConsumptionModel {
     @JsonProperty("createTime")
     private String createTime;
 
-    public String getPersonalIdentificationNumber() {
-        return personalIdentificationNumber;
+    public long getPersonalId() {
+        return personalId;
     }
 
-    public void setPersonalIdentificationNumber(String personalIdentificationNumber) {
-        this.personalIdentificationNumber = personalIdentificationNumber;
+    public void setPersonalId(long personalId) {
+        this.personalId = personalId;
     }
 
     public String getConsumptionType() {
@@ -58,7 +58,7 @@ public class SimpleConsumptionModel {
     @Override
     public String toString() {
         return "SimpleConsumptionModel{" +
-                "personalIdentificationNumber='" + personalIdentificationNumber + '\'' +
+                "personalId='" + personalId + '\'' +
                 ", consumptionType='" + consumptionType + '\'' +
                 ", amount=" + amount +
                 ", createTime='" + createTime + '\'' +

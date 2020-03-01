@@ -7,12 +7,12 @@ import org.codehaus.jackson.annotate.JsonProperty;
 * @Author: Jomin
 * @Date: 23:36 2020/2/20 
 */ 
-public class SimpleConsumptionModel {
+public class SimpleConsumptionModel implements Comparable<SimpleConsumptionModel>{
 
     private static final long serialVersionUID = 1L;
 
-    @JsonProperty("personalIdentificationNumber")
-    private long personalIdentificationNumber;
+    @JsonProperty("personalId")
+    private long personalId;
 
     @JsonProperty("consumptionType")
     private String consumptionType;
@@ -23,12 +23,12 @@ public class SimpleConsumptionModel {
     @JsonProperty("createTime")
     private String createTime;
 
-    public Long getPersonalIdentificationNumber() {
-        return personalIdentificationNumber;
+    public long getPersonalId() {
+        return personalId;
     }
 
-    public void setPersonalIdentificationNumber(Long personalIdentificationNumber) {
-        this.personalIdentificationNumber = personalIdentificationNumber;
+    public void setPersonalId(long personalId) {
+        this.personalId = personalId;
     }
 
     public String getConsumptionType() {
@@ -53,5 +53,17 @@ public class SimpleConsumptionModel {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    @Override
+    public int compareTo(SimpleConsumptionModel o)
+    {
+        if (amount == o.getAmount()) {
+            return 0;
+        } else if (amount > o.getAmount()) {
+            return -1;
+        } else {
+            return 1;
+        }
     }
 }

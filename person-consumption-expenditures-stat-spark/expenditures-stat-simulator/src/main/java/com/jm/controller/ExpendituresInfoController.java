@@ -2,6 +2,7 @@ package com.jm.controller;
 
 import com.jm.exception.ParameterException;
 import com.jm.request.ExpendituresInfoRequest;
+import com.jm.result.IResult;
 import com.jm.security.signature.AESSignature;
 import com.jm.service.ExpendituresInfoService;
 import com.jm.utils.JSONUtil;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +42,16 @@ public class ExpendituresInfoController extends BaseController {
         ExpendituresInfoRequest expendituresInfoRequest = parseEncryptedJsonRequest(request, ExpendituresInfoRequest.class);
         return create4Result(expendituresInfoService.handleExpendituresInfo(expendituresInfoRequest));
     }
+
+    @RequestMapping(value = "/personConsumptionHistory", method = RequestMethod.GET)
+    @ResponseBody
+    public IResult PersonConsumptionhistory(HttpServletRequest request,
+                                            @RequestParam(value = "dateType", required = true) String date,
+                                            @RequestParam(value = "userId", required = true) long userId) throws Exception {
+        return createResult(expendituresInfoService.getPersonConsumptionStat(date, userId));
+
+    }
+
 
     private <T> T parseEncryptedJsonRequest(HttpServletRequest request, Class<T> clz) {
         try {

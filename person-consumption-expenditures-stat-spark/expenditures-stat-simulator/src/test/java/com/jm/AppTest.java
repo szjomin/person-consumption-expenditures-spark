@@ -54,12 +54,12 @@ public class AppTest
         SimpleConsumptionModel simpleConsumption1 = new SimpleConsumptionModel();
         SimpleConsumptionModel simpleConsumption2 = new SimpleConsumptionModel();
 
-        simpleConsumption1.setPersonalIdentificationNumber(56000001L);
+        simpleConsumption1.setPersonalId(new Long(56000001));
         simpleConsumption1.setConsumptionType("insurance");
         simpleConsumption1.setAmount(1000);
         /*simpleConsumption1.setCreateTime(beginDate);*/
 
-        simpleConsumption1.setPersonalIdentificationNumber(56000001L);
+        simpleConsumption1.setPersonalId(new Long(56000001));
         simpleConsumption2.setConsumptionType("loanRepayment");
         simpleConsumption2.setAmount(2000);
 

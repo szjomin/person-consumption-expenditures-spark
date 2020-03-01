@@ -6,21 +6,21 @@ import java.io.Serializable;
 
 public class PersonConsumptionKey implements Ordered<PersonConsumptionKey>, Serializable
 {
-  public Long personalIdentificationNumber;
+  public Long personalId;
   public String consumptionType;
   public String createTime;
 
   @Override
   public int compareTo(PersonConsumptionKey that)
   {
-    if (this.personalIdentificationNumber == that.getPersonalIdentificationNumber()) {
+    if (this.personalId == that.getPersonalId()) {
       if (this.consumptionType.compareTo(that.getConsumptionType())==0) {
         return this.createTime.compareTo(that.getCreateTime());
       } else {
         return this.consumptionType.compareTo(that.getConsumptionType());
       }
     } else {
-      Long n = this.personalIdentificationNumber - that.getPersonalIdentificationNumber();
+      Long n = this.personalId - that.getPersonalId();
       return n > 0 ? 1 : (n == 0 ? 0 : -1);
     }
   }
@@ -77,7 +77,7 @@ public class PersonConsumptionKey implements Ordered<PersonConsumptionKey>, Seri
 
     PersonConsumptionKey that = (PersonConsumptionKey) o;
 
-    if (personalIdentificationNumber != null ? !personalIdentificationNumber.equals(that.personalIdentificationNumber) : that.personalIdentificationNumber != null) return false;
+    if (personalId != null ? !personalId.equals(that.personalId) : that.personalId != null) return false;
     if (consumptionType != null ? !consumptionType.equals(that.consumptionType) : that.consumptionType != null) return false;
     return !(createTime != null ? !createTime.equals(that.createTime) : that.createTime != null);
 
@@ -85,18 +85,18 @@ public class PersonConsumptionKey implements Ordered<PersonConsumptionKey>, Seri
 
   @Override
   public int hashCode() {
-    int result = personalIdentificationNumber != null ? personalIdentificationNumber.hashCode() : 0;
+    int result = personalId != null ? personalId.hashCode() : 0;
     result = 31 * result + (consumptionType != null ? consumptionType.hashCode() : 0);
     result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
     return result;
   }
 
-  public Long getPersonalIdentificationNumber() {
-    return personalIdentificationNumber;
+  public Long getPersonalId() {
+    return personalId;
   }
 
-  public void setPersonalIdentificationNumber(Long personalIdentificationNumber) {
-    this.personalIdentificationNumber = personalIdentificationNumber;
+  public void setPersonalId(Long personalId) {
+    this.personalId = personalId;
   }
 
   public String getConsumptionType() {
@@ -111,7 +111,7 @@ public class PersonConsumptionKey implements Ordered<PersonConsumptionKey>, Seri
     return createTime;
   }
 
-  public void setCreatTime(String createTime) {
+  public void setCreateTime(String createTime) {
     this.createTime = createTime;
   }
 }

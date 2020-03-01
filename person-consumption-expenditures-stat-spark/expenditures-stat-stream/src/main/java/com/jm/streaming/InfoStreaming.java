@@ -3,6 +3,7 @@ package com.jm.streaming;
 import com.jm.common.HBaseClient;
 import com.jm.key.PersonConsumptionKey;
 import com.jm.model.SimpleConsumptionModel;
+import com.jm.model.SimplePersonConsumptionStatModel;
 import com.jm.request.ExpendituresInfoRequest;
 import com.jm.service.StatService;
 import com.jm.utils.DateUtils;
@@ -125,8 +126,6 @@ public class InfoStreaming {
                     public JavaRDD<ConsumerRecord<String, String>> call(JavaRDD<ConsumerRecord<String, String>> javaRDD, Time time) throws Exception {
                         OffsetRange[] offsets = ((HasOffsetRanges) javaRDD.rdd()).offsetRanges();
                         offsetRanges.set(offsets);
-                        System.out.println("=====================kafkaMessageDStreamTransform=================================");
-                        System.out.println("javaRDD : " + javaRDD.toString());
                         return javaRDD;
                     }
                 });
@@ -137,7 +136,6 @@ public class InfoStreaming {
                     @Override
                     public Iterator<Tuple2<PersonConsumptionKey, Long>> call(ConsumerRecord<String, String> record) throws Exception {
                         List<Tuple2<PersonConsumptionKey, Long>> list = new ArrayList();
-                        System.out.println("=====================kafkaMessageDStreamTransform.flatMapToPair=================================");
                         ExpendituresInfoRequest requestModel;
                         try {
                             requestModel = JSONUtil.json2Object(record.value(), ExpendituresInfoRequest.class);
@@ -149,26 +147,22 @@ public class InfoStreaming {
                         if (requestModel == null) {
                             return list.iterator();
                         }
-                        System.out.println("=====================requestModel=================================" + requestModel.toString());
+
 
                         List<SimpleConsumptionModel> singleList = requestModel.getSimpleConsumptionList();
 
-                        System.out.println("===================== singleList =================================" + singleList.toString());
 
                         try {
                             for (SimpleConsumptionModel singleModel : singleList) {
 
-                                System.out.println("===================== simpleConsumptionModel =================================" + singleModel.toString());
 
                                 PersonConsumptionKey key = new PersonConsumptionKey();
-                                key.setPersonalIdentificationNumber(Long.parseLong(singleModel.getPersonalIdentificationNumber()));
-                                //key.setCreatTime(DateUtils.getDateStringByMillisecond(DateUtils.HOUR_FORMAT, Long.parseLong(singleModel.getCreateTime())));
-                                key.setCreatTime("201901111012");
+                                key.setPersonalId(singleModel.getPersonalId());
+                                // count per day
+                                key.setCreateTime(DateUtils.getDateStringByMillisecond(DateUtils.HOUR_FORMAT, Long.parseLong(singleModel.getCreateTime())).substring(0, 8));
                                 key.setConsumptionType(singleModel.getConsumptionType());
 
-                                System.out.println("=====================key=================================" + key.toString());
-
-                                Tuple2<PersonConsumptionKey, Long> t = new Tuple2(key, singleModel.getAmount() / 1000);
+                                Tuple2<PersonConsumptionKey, Long> t = new Tuple2(key, singleModel.getAmount());
 
                                 list.add(t);
 
@@ -176,7 +170,7 @@ public class InfoStreaming {
                         } catch (Exception e) {
                             log.error("error :", e);
                         }
-                        System.out.println("=====================list=================================" + list.toString());
+
                         return list.iterator();
                     }
                 }).reduceByKey(new Function2<Long, Long, Long>() {
@@ -186,15 +180,15 @@ public class InfoStreaming {
                     }
                 });
 
-        //将每个用户的统计时长写入hbase
+        //将用户的消费记录计入hbase
         javaPairDStream.foreachRDD(new VoidFunction<JavaPairRDD<PersonConsumptionKey, Long>>() {
             @Override
             public void call(JavaPairRDD<PersonConsumptionKey, Long> rdd) throws Exception {
-                System.out.println("=====================javaPairDStream.foreachRDD================================");
+
                 rdd.foreachPartition(new VoidFunction<Iterator<Tuple2<PersonConsumptionKey, Long>>>() {
                     @Override
                     public void call(Iterator<Tuple2<PersonConsumptionKey, Long>> it) throws Exception {
-                        System.out.println("===================== rdd.foreachPartition================================");
+
 
                         StatService service = StatService.getInstance(serverProps);
 
@@ -202,14 +196,12 @@ public class InfoStreaming {
                             Tuple2<PersonConsumptionKey, Long> t = it.next();
                             PersonConsumptionKey key = t._1();
 
-                            SimpleConsumptionModel model = new SimpleConsumptionModel();
-                            model.setPersonalIdentificationNumber(MyStringUtil.getFixedLengthStr(String.valueOf(key.getPersonalIdentificationNumber()), 10));
+                            SimplePersonConsumptionStatModel model = new SimplePersonConsumptionStatModel();
+                            model.setPersonId(MyStringUtil.getFixedLengthStr(String.valueOf(key.getPersonalId()), 10));
                             model.setCreateTime(key.getCreateTime());
                             model.setConsumptionType(key.getConsumptionType());
                             model.setAmount(t._2());
-                            System.out.println("===========================================================");
-                            System.out.println("===================== model================================" + model.toString());
-                            System.out.println("===========================================================");
+
                             service.addPersonConsumptionHistory(model);
                         }
                     }

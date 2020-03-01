@@ -7,10 +7,10 @@ import org.codehaus.jackson.annotate.JsonProperty;
 * @Author: Jomin
 * @Date: 23:36 2020/2/20 
 */ 
-public class SimpleCustomerProfileModel {
+public class SimplePersonProfileModel extends BaseModel{
 
     @JsonProperty("personalId")
-    private String personalId;
+    private long personalId;
 
     @JsonProperty("career")
     private String career;
@@ -30,11 +30,11 @@ public class SimpleCustomerProfileModel {
     @JsonProperty("annualIncome")
     private long annualIncome;
 
-    public String getPersonalId() {
+    public long getPersonalId() {
         return personalId;
     }
 
-    public void setPersonalId(String personalId) {
+    public void setPersonalId(long personalId) {
         this.personalId = personalId;
     }
 

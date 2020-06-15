@@ -40,7 +40,7 @@
     <common.httpcore.version>4.3</common.httpcore.version>
     <spring.amqp.version>1.4.2.RELEASE</spring.amqp.version>
     <appstore.common.version>20150410</appstore.common.version>
-    <hibernate.validator.version>4.3.0.Final</hibernate.validator.version>
+    <hibernate.validator.version>5.3.5.Final</hibernate.validator.version>
     <hbase.version>1.2.0</hbase.version>
     <spark>2.3.0</spark>
   </properties>
